@@ -27,6 +27,8 @@ import it.unive.lisa.type.Type;
 import it.unive.lisa.util.collections.workset.WorkingSet;
 import it.unive.lisa.util.datastructures.graph.algorithms.FixpointException;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -92,6 +94,12 @@ public interface InterproceduralAnalysis<A extends AbstractState<A, H, V, T>,
 	void fixpoint(AnalysisState<A, H, V, T> entryState,
 			Class<? extends WorkingSet<Statement>> fixpointWorkingSet,
 			int wideningThreshold, DescendingPhaseType descendingPhase, int descendingGlbThreshold)
+			throws FixpointException;
+	
+	void fixpoint(AnalysisState<A, H, V, T> entryState,
+			Class<? extends WorkingSet<Statement>> fixpointWorkingSet,
+			DescendingPhaseType descendingPhase, int descendingGlbThreshold, 
+			Map<CFG, Optional<CFGWithAnalysisResults<A, H, V, T>>> ascendingResult)
 			throws FixpointException;
 
 	/**

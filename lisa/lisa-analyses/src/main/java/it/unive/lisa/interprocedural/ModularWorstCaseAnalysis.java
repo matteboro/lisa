@@ -79,7 +79,7 @@ public class ModularWorstCaseAnalysis<A extends AbstractState<A, H, V, T>,
 	public ModularWorstCaseAnalysis() {
 		this.results = new ConcurrentHashMap<>();
 	}
-
+	
 	@Override
 	public void fixpoint(AnalysisState<A, H, V, T> entryState,
 			Class<? extends WorkingSet<Statement>> fixpointWorkingSet,
@@ -105,6 +105,14 @@ public class ModularWorstCaseAnalysis<A extends AbstractState<A, H, V, T>,
 			} catch (SemanticException | AnalysisSetupException e) {
 				throw new FixpointException("Error while creating the entrystate for " + cfg, e);
 			}
+	}
+	
+	@Override
+	public void fixpoint(AnalysisState<A, H, V, T> entryState,
+			Class<? extends WorkingSet<Statement>> fixpointWorkingSet, DescendingPhaseType descendingPhase,
+			int descendingGlbThreshold, Map<CFG, Optional<CFGWithAnalysisResults<A, H, V, T>>> ascendingResult) throws FixpointException {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

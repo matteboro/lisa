@@ -523,7 +523,46 @@ public class CFG extends CodeGraph<CFG, Statement, Edge> implements CodeMember {
 
 		return new CFGWithAnalysisResults<>(this, singleton, startingPoints, finalResults);
 	}
+	
+	public <A extends AbstractState<A, H, V, T>,
+	H extends HeapDomain<H>,
+	V extends ValueDomain<V>,
+	T extends TypeDomain<T>> CFGWithAnalysisResults<A, H, V, T> descendingPhase(
+			AnalysisState<A, H, V, T> singleton,
+			Map<Statement, AnalysisState<A, H, V, T>> startingPoints,
+			InterproceduralAnalysis<A, H, V, T> interprocedural,
+			Map<Statement, AnalysisState<A, H, V, T>> ascendingResult,
+			WorkingSet<Statement> ws,
+			DescendingPhaseType descendingPhase,
+			int descendingGlbThreshold) throws FixpointException {
+		
+		Map<Statement, Pair<AnalysisState<A, H, V, T>, StatementStore<A, H, V, T>>> previousResults = new HashMap<>();
+		ascendingResult.forEach((st, state) -> previousResults.put(st, Pair.of(state, new StatementStore<>(singleton.bottom()))));
+		Map<Statement, Pair<AnalysisState<A, H, V, T>, StatementStore<A, H, V, T>>> starting = new HashMap<>();
+		startingPoints.forEach((st, state) -> starting.put(st, previousResults.get(st)));
 
+		this.getNodeList().forEach(ws::push);
+		
+		Map<Statement, Pair<AnalysisState<A, H, V, T>, StatementStore<A, H, V, T>>> fixpoint;
+		
+		Fixpoint<CFG, Statement, Edge,
+		Pair<AnalysisState<A, H, V, T>, StatementStore<A, H, V, T>>> fix = new Fixpoint<>(this);
+		
+		fixpoint = fix.fixpoint(starting,
+				ws,
+				new CFGFixpoint<>(descendingGlbThreshold, interprocedural, descendingPhase),
+				previousResults);
+		
+		HashMap<Statement, AnalysisState<A, H, V, T>> finalResults = new HashMap<>(fixpoint.size());
+		for (Entry<Statement, Pair<AnalysisState<A, H, V, T>, StatementStore<A, H, V, T>>> e : fixpoint.entrySet()) {
+			finalResults.put(e.getKey(), e.getValue().getLeft());
+			for (Entry<Statement, AnalysisState<A, H, V, T>> ee : e.getValue().getRight())
+				finalResults.put(ee.getKey(), ee.getValue());
+		}
+		
+		return new CFGWithAnalysisResults<>(this, singleton, startingPoints, finalResults);
+	}
+	
 	private class CFGFixpoint<A extends AbstractState<A, H, V, T>,
 			H extends HeapDomain<H>,
 			V extends ValueDomain<V>,
