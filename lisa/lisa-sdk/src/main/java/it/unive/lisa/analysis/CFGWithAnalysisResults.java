@@ -124,6 +124,10 @@ public class CFGWithAnalysisResults<A extends AbstractState<A, H, V, T>,
 	public void setId(String id) {
 		this.id = id;
 	}
+	
+	public StatementStore<A, H, V, T> getResults(){
+		return this.results;
+	}
 
 	/**
 	 * Yields the computed result before a given statement (entry state).

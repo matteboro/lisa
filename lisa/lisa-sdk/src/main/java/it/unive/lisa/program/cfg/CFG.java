@@ -528,6 +528,22 @@ public class CFG extends CodeGraph<CFG, Statement, Edge> implements CodeMember {
 	H extends HeapDomain<H>,
 	V extends ValueDomain<V>,
 	T extends TypeDomain<T>> CFGWithAnalysisResults<A, H, V, T> descendingPhase(
+			AnalysisState<A, H, V, T> entryState,
+			InterproceduralAnalysis<A, H, V, T> interprocedural,
+			Map<Statement, AnalysisState<A, H, V, T>> ascendingResult,
+			WorkingSet<Statement> ws,
+			DescendingPhaseType descendingPhase,
+			int descendingGlbThreshold) throws FixpointException {
+		Map<Statement, AnalysisState<A, H, V, T>> start = new HashMap<>();
+		entrypoints.forEach(e -> start.put(e, entryState));
+		return descendingPhase(entryState, start, interprocedural, ascendingResult, ws, descendingPhase, descendingGlbThreshold);
+	}
+
+	
+	public <A extends AbstractState<A, H, V, T>,
+	H extends HeapDomain<H>,
+	V extends ValueDomain<V>,
+	T extends TypeDomain<T>> CFGWithAnalysisResults<A, H, V, T> descendingPhase(
 			AnalysisState<A, H, V, T> singleton,
 			Map<Statement, AnalysisState<A, H, V, T>> startingPoints,
 			InterproceduralAnalysis<A, H, V, T> interprocedural,

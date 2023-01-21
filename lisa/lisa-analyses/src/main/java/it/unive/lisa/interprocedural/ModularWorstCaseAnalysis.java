@@ -32,6 +32,7 @@ import it.unive.lisa.util.collections.workset.WorkingSet;
 import it.unive.lisa.util.datastructures.graph.algorithms.FixpointException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -104,14 +105,38 @@ public class ModularWorstCaseAnalysis<A extends AbstractState<A, H, V, T>,
 								wideningThreshold, descendingPhase, descendingGlbThreshold)));
 			} catch (SemanticException | AnalysisSetupException e) {
 				throw new FixpointException("Error while creating the entrystate for " + cfg, e);
-			}
+		}
 	}
 	
 	@Override
-	public void fixpoint(AnalysisState<A, H, V, T> entryState,
+	public void descendingPhase(AnalysisState<A, H, V, T> entryState,
 			Class<? extends WorkingSet<Statement>> fixpointWorkingSet, DescendingPhaseType descendingPhase,
 			int descendingGlbThreshold, Map<CFG, Optional<CFGWithAnalysisResults<A, H, V, T>>> ascendingResult) throws FixpointException {
-		// TODO Auto-generated method stub
+		for (CFG cfg : IterationLogger.iterate(LOG, app.getAllCFGs(), "Computing fixpoint over the whole program",
+				"cfgs"))
+			try {
+				AnalysisState<A, H, V, T> prepared = entryState;
+
+				for (Parameter arg : cfg.getDescriptor().getFormals()) {
+					Variable id = new Variable(arg.getStaticType(), arg.getName(), arg.getAnnotations(),
+							arg.getLocation());
+					prepared = prepared.assign(id, new PushAny(arg.getStaticType(), arg.getLocation()),
+							cfg.getGenericProgramPoint());
+				}
+				
+				Map<Statement, AnalysisState<A, H, V, T>> previousResults = new HashMap<>();
+				Optional<CFGWithAnalysisResults<A, H, V, T>> optionalCFGWithAscendingResult = ascendingResult.get(cfg);
+
+				if(!optionalCFGWithAscendingResult.isEmpty()) {
+					StatementStore<A, H, V, T> store = optionalCFGWithAscendingResult.get().getResults();
+					store.function.forEach((st, state) -> previousResults.put(st, state));
+				}
+				
+				results.put(cfg, Optional
+						.of(cfg.descendingPhase(prepared, this, previousResults, WorkingSet.of(fixpointWorkingSet), descendingPhase, descendingGlbThreshold)));
+			} catch (SemanticException | AnalysisSetupException e) {
+				throw new FixpointException("Error while creating the entrystate for " + cfg, e);
+		}
 		
 	}
 

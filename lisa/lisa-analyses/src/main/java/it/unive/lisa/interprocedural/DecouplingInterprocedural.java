@@ -89,7 +89,7 @@ public class DecouplingInterprocedural<
 	}
 
 	@Override
-	public void fixpoint(AnalysisState<AD, HD, VD, TD> entryState,
+	public void descendingPhase(AnalysisState<AD, HD, VD, TD> entryState,
 			Class<? extends WorkingSet<Statement>> fixpointWorkingSet, DescendingPhaseType descendingPhase,
 			int descendingGlbThreshold, Map<CFG, Optional<CFGWithAnalysisResults<AD, HD, VD, TD>>> ascendingResult)
 			throws FixpointException {
