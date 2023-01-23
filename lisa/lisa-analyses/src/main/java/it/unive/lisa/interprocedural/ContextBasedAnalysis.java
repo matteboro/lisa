@@ -261,4 +261,13 @@ public class ContextBasedAnalysis<A extends AbstractState<A, H, V, T>,
 			fixpointTriggers.add(cfg);
 		return res.getRight();
 	}
+
+	@Override
+	public void descendingPhase(AnalysisState<A, H, V, T> entryState,
+			Class<? extends WorkingSet<Statement>> fixpointWorkingSet, DescendingPhaseType descendingPhase,
+			int descendingGlbThreshold, Map<CFG, Optional<CFGWithAnalysisResults<A, H, V, T>>> ascendingResult)
+			throws FixpointException {
+		// TODO Auto-generated method stub
+		
+	}
 }

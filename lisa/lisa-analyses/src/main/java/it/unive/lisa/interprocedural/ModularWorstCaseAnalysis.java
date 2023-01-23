@@ -81,6 +81,10 @@ public class ModularWorstCaseAnalysis<A extends AbstractState<A, H, V, T>,
 		this.results = new ConcurrentHashMap<>();
 	}
 	
+	public Map<CFG, Optional<CFGWithAnalysisResults<A, H, V, T>>> getResults(){
+		return this.results;
+	}
+	
 	@Override
 	public void fixpoint(AnalysisState<A, H, V, T> entryState,
 			Class<? extends WorkingSet<Statement>> fixpointWorkingSet,
