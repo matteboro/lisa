@@ -16,5 +16,7 @@ public interface CFGWithAnalysisResultsDecoupler <
 	VD extends ValueDomain<VD>, 
 	TD extends TypeDomain<TD>>{
 	
+	public void setStates(AA ascendingState, AD descendingState);
+	
 	public CFGWithAnalysisResults<AD,HD,VD,TD> decouple(CFGWithAnalysisResults<AA,HA,VA,TA> ascendingResult);
 }

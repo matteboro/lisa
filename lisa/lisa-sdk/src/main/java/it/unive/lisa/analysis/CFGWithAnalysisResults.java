@@ -128,6 +128,10 @@ public class CFGWithAnalysisResults<A extends AbstractState<A, H, V, T>,
 	public StatementStore<A, H, V, T> getResults(){
 		return this.results;
 	}
+	
+	public StatementStore<A, H, V, T> getEntryStateStore(){
+		return this.entryStates;
+	}
 
 	/**
 	 * Yields the computed result before a given statement (entry state).

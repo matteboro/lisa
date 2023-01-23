@@ -61,6 +61,7 @@ public class DecouplingModularWorstCaseAnalysisInterprocedural<
 		this.ascendingInterproc = new ModularWorstCaseAnalysis<AA, HA, VA, TA>();
 		this.descendingInterproc = new ModularWorstCaseAnalysis<AD, HD, VD, TD>();
 		this.decoupler = decoupler;
+		this.decoupler.setStates(ascendingState, descendingState);
 		this.ascendingState = ascendingState;
 		this.descendingState = descendingState;
 	}
