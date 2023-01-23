@@ -80,6 +80,7 @@ T extends TypeDomain<T>>
 	public CFGWithAnalysisResults<SimpleAbstractState<H, ValueEnvironment<Interval>, T>, H, ValueEnvironment<Interval>, T> decouple(
 			CFGWithAnalysisResults<SimpleAbstractState<H, ValueEnvironment<Sign>, T>, H, ValueEnvironment<Sign>, T> ascendingResult) {
 		
+		int i = 0;
 		CFGWithAnalysisResults<SimpleAbstractState<H, ValueEnvironment<Interval>, T>, H, ValueEnvironment<Interval>, T> decoupledResults = 
 				new CFGWithAnalysisResults<>(ascendingResult, decoupleStatementStore(ascendingResult.getEntryStateStore()), decoupleStatementStore(ascendingResult.getResults()));
 		
@@ -95,13 +96,11 @@ T extends TypeDomain<T>>
 
 	@Override
 	public SimpleAbstractState<H, ValueEnvironment<Sign>, T> getAscendingState() {
-		// TODO Auto-generated method stub
 		return this.ascendingState;
 	}
 
 	@Override
 	public SimpleAbstractState<H, ValueEnvironment<Interval>, T> getDescendingState() {
-		// TODO Auto-generated method stub
 		return this.descendingState;
 	}
 }
