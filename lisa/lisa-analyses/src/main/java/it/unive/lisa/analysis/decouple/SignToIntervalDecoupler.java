@@ -29,7 +29,7 @@ T extends TypeDomain<T>>
 					T>{
 
 	private SimpleAbstractState<H, ValueEnvironment<Interval>, T> descendingState;
-	
+	private SimpleAbstractState<H, ValueEnvironment<Sign>, T> ascendingState;
 	public SignToIntervalDecoupler(H heap, T type) {
 		
 	}
@@ -90,6 +90,18 @@ T extends TypeDomain<T>>
 	public void setStates(SimpleAbstractState<H, ValueEnvironment<Sign>, T> ascendingState,
 			SimpleAbstractState<H, ValueEnvironment<Interval>, T> descendingState) {
 		this.descendingState = descendingState;
-		
+		this.ascendingState = ascendingState;
+	}
+
+	@Override
+	public SimpleAbstractState<H, ValueEnvironment<Sign>, T> getAscendingState() {
+		// TODO Auto-generated method stub
+		return this.ascendingState;
+	}
+
+	@Override
+	public SimpleAbstractState<H, ValueEnvironment<Interval>, T> getDescendingState() {
+		// TODO Auto-generated method stub
+		return this.descendingState;
 	}
 }

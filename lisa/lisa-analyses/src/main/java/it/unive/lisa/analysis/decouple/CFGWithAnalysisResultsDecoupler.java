@@ -18,5 +18,8 @@ public interface CFGWithAnalysisResultsDecoupler <
 	
 	public void setStates(AA ascendingState, AD descendingState);
 	
+	public AA getAscendingState();
+	public AD getDescendingState();
+	
 	public CFGWithAnalysisResults<AD,HD,VD,TD> decouple(CFGWithAnalysisResults<AA,HA,VA,TA> ascendingResult);
 }

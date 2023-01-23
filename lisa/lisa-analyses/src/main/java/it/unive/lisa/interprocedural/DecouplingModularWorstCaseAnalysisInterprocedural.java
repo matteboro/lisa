@@ -57,13 +57,13 @@ public class DecouplingModularWorstCaseAnalysisInterprocedural<
 	Map<CFG, Optional<CFGWithAnalysisResults<AD, HD, VD, TD>>> results;
 	
 	public DecouplingModularWorstCaseAnalysisInterprocedural(
-									CFGWithAnalysisResultsDecoupler<AA, HA, VA, TA, AD, HD, VD, TD> decoupler, AA ascendingState, AD descendingState){
+									CFGWithAnalysisResultsDecoupler<AA, HA, VA, TA, AD, HD, VD, TD> decoupler){
 		this.ascendingInterproc = new ModularWorstCaseAnalysis<AA, HA, VA, TA>();
 		this.descendingInterproc = new ModularWorstCaseAnalysis<AD, HD, VD, TD>();
 		this.decoupler = decoupler;
 		this.decoupler.setStates(ascendingState, descendingState);
-		this.ascendingState = ascendingState;
-		this.descendingState = descendingState;
+		this.ascendingState = decoupler.getAscendingState();
+		this.descendingState = decoupler.getDescendingState();
 	}
 	
 	@Override
