@@ -11,6 +11,8 @@ import it.unive.lisa.analysis.numeric.Sign;
 import it.unive.lisa.analysis.symbols.SymbolAliasing;
 import it.unive.lisa.analysis.value.TypeDomain;
 import it.unive.lisa.program.SyntheticLocation;
+import it.unive.lisa.program.cfg.statement.Statement;
+import it.unive.lisa.symbolic.value.Identifier;
 import it.unive.lisa.symbolic.value.Skip;
 import it.unive.lisa.util.numeric.IntInterval;
 import it.unive.lisa.util.numeric.MathNumber;
@@ -54,7 +56,15 @@ T extends TypeDomain<T>>
 		
 		ValueEnvironment<Interval> intervalEnv = new ValueEnvironment<>(Interval.BOTTOM);
 		
-		signEnv.function.forEach((id, sign) -> intervalEnv.putState(id,apply(sign)));;
+		if(signEnv.isBottom())
+			return intervalEnv.bottom();
+		if(signEnv.function == null) {
+			return intervalEnv.bottom();
+		}
+		
+		for(Identifier id : signEnv.function.keySet()) {
+			intervalEnv = intervalEnv.putState(id,apply(signEnv.getState(id)));
+		}
 		
 		return intervalEnv;
 	}
@@ -80,7 +90,6 @@ T extends TypeDomain<T>>
 	public CFGWithAnalysisResults<SimpleAbstractState<H, ValueEnvironment<Interval>, T>, H, ValueEnvironment<Interval>, T> decouple(
 			CFGWithAnalysisResults<SimpleAbstractState<H, ValueEnvironment<Sign>, T>, H, ValueEnvironment<Sign>, T> ascendingResult) {
 		
-		int i = 0;
 		CFGWithAnalysisResults<SimpleAbstractState<H, ValueEnvironment<Interval>, T>, H, ValueEnvironment<Interval>, T> decoupledResults = 
 				new CFGWithAnalysisResults<>(ascendingResult, decoupleStatementStore(ascendingResult.getEntryStateStore()), decoupleStatementStore(ascendingResult.getResults()));
 		

@@ -7,6 +7,7 @@ import org.junit.Test;
 import it.unive.lisa.AnalysisSetupException;
 import it.unive.lisa.AnalysisTestExecutor;
 import it.unive.lisa.LiSAConfiguration;
+import it.unive.lisa.LiSAConfiguration.DescendingPhaseType;
 import it.unive.lisa.LiSAConfiguration.GraphType;
 import it.unive.lisa.analysis.AbstractState;
 import it.unive.lisa.analysis.SimpleAbstractState;
@@ -20,6 +21,7 @@ import it.unive.lisa.interprocedural.DecouplingModularWorstCaseAnalysisInterproc
 
 public class DecouplingTest extends AnalysisTestExecutor {
 
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
 	public void testSigntoInterval() throws AnalysisSetupException {
@@ -34,9 +36,21 @@ public class DecouplingTest extends AnalysisTestExecutor {
 		DecouplingModularWorstCaseAnalysisInterprocedural interproc = new DecouplingModularWorstCaseAnalysisInterprocedural<>(decoupler);
 		
 		conf.interproceduralAnalysis = interproc;
-		conf.abstractState = getDefaultFor(AbstractState.class, getDefaultFor(HeapDomain.class), new Sign(),
+		conf.abstractState = getDefaultFor(AbstractState.class, getDefaultFor(HeapDomain.class), new Interval(),
 				new TypeEnvironment<>(new InferredTypes()));
 		conf.analysisGraphs = GraphType.DOT;
+		conf.descendingPhaseType = DescendingPhaseType.GLB;
 		perform("decoupling-sign-to-interval", "program.imp", conf);
 	}
+	
+	/*
+	@Test
+	public void testSign() throws AnalysisSetupException {
+		LiSAConfiguration conf = new LiSAConfiguration();
+		conf.serializeResults = true;
+		conf.abstractState = getDefaultFor(AbstractState.class, getDefaultFor(HeapDomain.class), new Sign(),
+				new TypeEnvironment<>(new InferredTypes()));
+		perform("decoupling-sign-to-interval", "program.imp", conf);
+	}
+	*/
 }

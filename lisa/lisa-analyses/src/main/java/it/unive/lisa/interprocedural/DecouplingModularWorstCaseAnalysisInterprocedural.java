@@ -1,6 +1,7 @@
 package it.unive.lisa.interprocedural;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -79,13 +80,13 @@ public class DecouplingModularWorstCaseAnalysisInterprocedural<
 			DescendingPhaseType descendingPhase, int descendingGlbThreshold) throws FixpointException {
 		
 		ascendingInterproc.fixpoint(
-				new AnalysisState<>(this.ascendingState.bottom(), 
-				new Skip(SyntheticLocation.INSTANCE), 
-				new SymbolAliasing()), 
-					fixpointWorkingSet, 
-					wideningThreshold, 
-					DescendingPhaseType.NONE, 
-					0);
+				new AnalysisState<>(this.ascendingState.top(), 
+						new Skip(SyntheticLocation.INSTANCE), 
+						new SymbolAliasing()), 
+				fixpointWorkingSet, 
+				wideningThreshold, 
+				DescendingPhaseType.NONE, 
+				0);
 		
 		 Map<CFG, Optional<CFGWithAnalysisResults<AA, HA, VA, TA>>> ascendingResults = ascendingInterproc.getResults();
 		 Map<CFG, Optional<CFGWithAnalysisResults<AD, HD, VD, TD>>> descendingStartingResults = new HashMap<>();
@@ -99,7 +100,7 @@ public class DecouplingModularWorstCaseAnalysisInterprocedural<
 		 }
 		 
 		 descendingInterproc.descendingPhase(
-				new AnalysisState<>(this.descendingState.bottom(), 
+				new AnalysisState<>(this.descendingState.top(), 
 				new Skip(SyntheticLocation.INSTANCE), 
 				new SymbolAliasing()), 
 					fixpointWorkingSet, 
@@ -112,8 +113,7 @@ public class DecouplingModularWorstCaseAnalysisInterprocedural<
 
 	@Override
 	public Collection<CFGWithAnalysisResults<AD, HD, VD, TD>> getAnalysisResultsOf(CFG cfg) {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.singleton(results.get(cfg).orElse(null));
 	}
 
 	@Override
